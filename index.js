@@ -1,2 +1,2 @@
-const server = require('./src/server/api')
-server()
+const func = require('./src/tasks/func')
+func()
