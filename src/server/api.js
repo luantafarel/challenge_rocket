@@ -3,30 +3,43 @@ const express = require('express')
 const readline = require('readline');
 const stream = require('stream');
 const create_obj = require('../utils/create_object')
+const gen_avg = require('../utils/generate_avg')
+const config = require('../config')
 const app = express()
-const port = 3001
-const path = '../../files/test_file.txt'
 
-app.get('/',(req,res) => {
-    
-    if(fs.existsSync(path)) {
-        let instream = fs.createReadStream(path), outstream = new stream, arr = []
-        readline.createInterface(instream,outstream);
+app.get('/', async (req, res) => {
+    // check if file exists
+    if (fs.existsSync(config.path)) {
+        let arr = [], treated, rl,
+            lineReader = readline.createInterface({
+                input: fs.createReadStream(config.path),
+                crlfDelay: Infinity
+            })
 
-        rl.on('line',function(line) {
-            arr.push(line);
-        });
+        lineReader.on('line', (line) => {
+            arr.push(line)
+        })
+        lineReader.on('close', function () {
+            // validate the file and return the objects extrated from it
+            try {
+                if (arr.length != 0) treated = create_obj(arr)
+                else throw 'File empty'
+            } catch (err) {
+                return res.status(422).send(err)
+            }
 
-        create_obj(arr)
-        
-        rl.on('close',function() {
-            res.send(arr)
-        });
-    }else {
-        res.status(404).send('Arquivo não existe')
+            // generate avg and return the output for the file.
+            response = gen_avg(treated)
+
+            fs.writeFile(`${config.path}output.txt`, response.join('\n'), function (err) {
+                if (err) return res.status(500).send(err);
+            })
+        })
+    } else {
+        return res.status(404).send('Arquivo não existe')
     }
 })
 
 module.exports = function start() {
-    app.listen(port,() => { })
+    app.listen(config.port, () => { })
 }
