@@ -1,0 +1,13 @@
+{
+  "name": "challenge_rocket",
+  "version": "1.0.0",
+  "description": "Challenge designed by Rocket.Chat to test Luan Tafarel",
+  "main": "index.js",
+  "repository": "https://github.com/luantafarel/challenge_rocket",
+  "author": "Luan Tafarel",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "fs": "^0.0.1-security"
+  }
+}
