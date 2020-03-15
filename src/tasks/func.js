@@ -1,46 +1,41 @@
 const fs = require('fs')
-const readline = require('readline');
 const create_obj = require('../utils/create_object')
 const gen_avg = require('../utils/generate_avg')
 const config = require('../config')
 
-module.exports = () => {
+module.exports = async (path = config.path3) => {
     // check if file exists
-    if (fs.existsSync(config.path)) {
-        let arr = [], treated, rl,
-            lineReader = readline.createInterface({
-                input: fs.createReadStream(config.path),
-                crlfDelay: Infinity
-            })
-
-        lineReader.on('line', (line) => {
-            arr.push(line)
-        })
-        lineReader.on('close', function () {
+    try {
+        if (fs.existsSync(path)) {
+            let treated, newArr = [],
+                arr = await fs.readFileSync(path).toString().split("\n")
             // validate the file and return the objects extrated from it
-            try {
-                if (arr.length != 0) treated = create_obj(arr)
-                else throw 'File empty'
-                // generate avg and return the output for the file.
-                response = gen_avg(treated)
-            } catch (err) {
-                console.log(err)
-                return err
+            test = arr[0]
+            if ((arr.length != 0) && (test != "")) {
+                for (a of arr) {
+                    //had to remove the \r in here
+                    newArr.push(a.replace('\r', ''))
+                }
+                treated = await create_obj(newArr)
             }
-            fs.writeFile(`${config.path}_output.txt`, response.join('\n'), function (err) {
+            else throw 'File empty'
+            // generate avg and return the output for the file.
+            response = gen_avg(treated)
+            fs.writeFile(`${path}_output.txt`, response.join('\n'), function (err) {
                 if (err) {
-                    console.log(err)
-                    return err
+                    throw err
                 }
                 else {
-                    console.log('Sucesso, arquivo ' + `${config.path}_output.txt ` + 'criado')
-                    return
+                    console.log('Sucesso, arquivo ' + `${path}_output.txt ` + 'criado')
+                    return 'Sucesso, arquivo ' + `${path}_output.txt ` + 'criado'
                 }
             })
-        })
+        } else {
+            throw 'Arquivo não existe'
+        }
 
-    } else {
-        console.log('Arquivo não existe')
-        return
+    } catch (err) {
+        console.log(err)
+        return err
     }
 }

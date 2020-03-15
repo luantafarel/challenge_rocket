@@ -1,11 +1,11 @@
 const valid = require('./file_validator')
-module.exports = (arr) => {
+module.exports = async (arr) => {
     try {
         const country_leng = Number(arr.shift()),
             countries = arr.splice(0, country_leng),
             data_leng = Number(arr.shift()),
             datas = arr.splice(0, data_leng)
-        valid(country_leng, countries, data_leng, datas)
+        await valid(country_leng, countries, data_leng, datas)
         let splited, countries_obj = {}, tasks_obj = {}
         for (data of datas) {
             splited = data.split(' ')
@@ -17,6 +17,7 @@ module.exports = (arr) => {
         }
         return { countries_obj, tasks_obj }
     } catch (err) {
-        throw 'File format is not correct'
+ 
+        throw err
     }
 }

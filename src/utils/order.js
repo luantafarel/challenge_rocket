@@ -4,7 +4,6 @@ module.exports = (obj, countries) => {
         response.push(`${o} ${obj[o]}`)
     }
     for (key of keysSorted) {
-        if (!countries[key]) throw 'No country with reffered id, check file'
         response.push(`${countries[key]} ${obj[key]}`)
     }
     return response
