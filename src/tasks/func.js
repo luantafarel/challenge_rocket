@@ -21,15 +21,9 @@ module.exports = async (path = config.path3) => {
             else throw 'File empty'
             // generate avg and return the output for the file.
             response = gen_avg(treated)
-            fs.writeFile(`${path}_output.txt`, response.join('\n'), function (err) {
-                if (err) {
-                    throw err
-                }
-                else {
-                    console.log('Sucesso, arquivo ' + `${path}_output.txt ` + 'criado')
-                    return 'Sucesso, arquivo ' + `${path}_output.txt ` + 'criado'
-                }
-            })
+            await fs.writeFileSync(`${path}_output.txt`, response.join('\n'))
+            console.log('Sucesso, arquivo ' + `${path}_output.txt ` + 'criado')
+            return 'Sucesso, arquivo ' + `${path}_output.txt ` + 'criado'
         } else {
             throw 'Arquivo não existe'
         }
