@@ -62,5 +62,7 @@ US 10.00
 
 - Files not in the format will return error
 - If an not mapped id from a country is present in an task run, it will be ignored.
+
+# How to run
 - Use, yarn to install the modules and yarn start to start the project (the path in passed trough index, you can change it o use the default path that is passed inside the /src/tasks/func.js) more paths included in config.js file.
 - Yarn test is available
